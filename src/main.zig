@@ -20,7 +20,7 @@ const uart_rx_pin = gpio.num(1);
 // zig fmt: off
 pub const pin_config = rp2xxx.pins.GlobalConfiguration{
     .GPIO17 = .{ .name = "led", .direction = .out },
-    .GPIO1 =  .{ .name = "c4", .direction = .in },
+    .GPIO1 =  .{ .name = "c4", .direction = .out },
     .GPIO6 =  .{ .name = "r7", .direction = .in },
     .GPIO7 =  .{ .name = "r6", .direction = .in },
     .GPIO8 =  .{ .name = "r5", .direction = .in },
@@ -29,24 +29,18 @@ pub const pin_config = rp2xxx.pins.GlobalConfiguration{
     .GPIO23 = .{ .name = "r2", .direction = .in },
     .GPIO20 = .{ .name = "r1", .direction = .in },
     .GPIO22 = .{ .name = "r0", .direction = .in },
-    .GPIO26 = .{ .name = "c0", .direction = .in },
-    .GPIO27 = .{ .name = "c1", .direction = .in },
-    .GPIO28 = .{ .name = "c2", .direction = .in },
-    .GPIO29 = .{ .name = "c3", .direction = .in },
+    .GPIO26 = .{ .name = "c0", .direction = .out },
+    .GPIO27 = .{ .name = "c1", .direction = .out },
+    .GPIO28 = .{ .name = "c2", .direction = .out },
+    .GPIO29 = .{ .name = "c3", .direction = .out },
 };
 pub const p = pin_config.pins();
-pub const pin_mappings_right = [keymap.key_count]?[2]usize{
-         null, null, null, null, null,      .{0,4},.{1,4},.{2,4},.{3,4},.{4,4},
-   null, null, null, null, null, null,      .{0,5},.{1,5},.{2,5},.{3,5},.{4,5},.{4,7},
-         null, null, null, null, null,      .{0,6},.{1,6},.{2,6},.{3,6},.{4,6},
-                        null, null ,null, .{0, 7}, .{1,7}, .{2,7}
-};
 
-pub const pin_mappings_left = [keymap.key_count]?[2]usize{
-          .{0,0}, .{1,0}, .{2,0}, .{3,0}, .{4,0},        null, null, null, null, null,
-  .{0,3}, .{0,1}, .{1,1}, .{2,1}, .{3,1}, .{4,1},        null, null, null, null, null, null,
-          .{0,2}, .{1,2}, .{2,2}, .{3,2}, .{4,2},        null, null, null, null, null,
-                            .{2,3}, .{3,3}, .{4, 3},   null, null, null
+pub const pin_mappings = [keymap.key_count]?[2]usize{
+          .{0,0}, .{1,0}, .{2,0}, .{3,0}, .{4,0},          .{0,4},.{1,4},.{2,4},.{3,4},.{4,4},
+  .{0,3}, .{0,1}, .{1,1}, .{2,1}, .{3,1}, .{4,1},          .{0,5},.{1,5},.{2,5},.{3,5},.{4,5},.{4,7},
+          .{0,2}, .{1,2}, .{2,2}, .{3,2}, .{4,2},          .{0,6},.{1,6},.{2,6},.{3,6},.{4,6},
+                            .{2,3}, .{3,3}, .{4, 3},   .{0, 7}, .{1,7}, .{2,7}
 };
 
 pub const scanner_settings = zigmkay.matrix_scanning.ScannerSettings{
@@ -56,8 +50,6 @@ pub const scanner_settings = zigmkay.matrix_scanning.ScannerSettings{
 // zig fmt: on
 pub const clacky_pin_cols = [_]rp2xxx.gpio.Pin{ p.c0, p.c1, p.c2, p.c3, p.c4 };
 pub const clacky_pin_rows = [_]rp2xxx.gpio.Pin{ p.r0, p.r1, p.r2, p.r3, p.r4, p.r5, p.r6, p.r7 };
-
-const primary = true;
 
 pub fn main() !void {
 
@@ -71,7 +63,7 @@ pub fn main() !void {
         scanner_settings,
         keymap.combos[0..],
         &keymap.custom_functions,
-        pin_mappings_right,
+        pin_mappings,
         &keymap.keymap,
         keymap.sides,
         null,
